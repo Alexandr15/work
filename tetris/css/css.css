@@ -1,0 +1,135 @@
+/* 
+    Created on : 14.08.2018, 15:13:30
+    Author     : mikima
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.container{
+    width: 1024px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 1em 0 0 1em;    
+}
+
+.frame, .frame2{
+    border: 2px solid black;
+    margin: 0 auto;
+    padding: 0;
+    float: right;
+}
+
+.frame2{
+    float: left;
+}
+
+.clear{
+    clear: both;
+}
+
+#desc, #desc5{
+    margin: 0;
+    padding: 0;
+    background-color: #eef4f7;
+    color: black;
+    float: left;
+}
+
+#desc2{
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #eef4f7;
+    float: right;
+}
+
+#desc3{
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
+    background-color: #eef4f7;
+    padding: 5px;
+    float: right;
+}
+
+#desc4{
+    border-left: 2px solid black;
+    background-color: #eef4f7;
+    padding: 20px;
+    float: right;
+}
+
+#showFig{
+    background-color: #eef4f7;
+}
+
+#arrowleft, #arrowright, #arrowdown, #space{
+    border: 1px solid black;
+    background-color: #666;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px auto;
+    text-align: center;
+    padding: 10px 0 0 0;
+}
+
+#arrowleft:hover, #arrowright:hover, #arrowdown:hover, #space:hover, #start:hover, #pause:hover{
+    background-color: #cccccc;
+}
+
+#speed, #score{
+    width: 100px;
+    height: 30px;
+    padding: 10px 0 0 0;
+    text-align: left;
+}
+
+#pause{
+    border: 1px solid black;
+    background-color: #666;
+    width: 80px;
+    height: 40px;
+    margin: 10px auto 0 auto;
+    text-align: center;
+    padding: 10px 0 0 0;
+}
+
+.frame{
+    border: 2px solid black;
+}
+
+.frame3{
+    width: 1024px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px 0 20px 0;
+    height: auto;
+}
+
+.end{
+    position: absolute;
+    left: 20%;
+    top: 50%;
+    text-align: center;
+    color: red;
+}
+
+.rect, .rect2, .rect3{
+    padding: 3px 0 0 3px;
+    float: left;
+}
+
+.rect4{
+    width: 500px;
+    height: 80px;
+}
+
+.clear{
+    clear: both;
+}

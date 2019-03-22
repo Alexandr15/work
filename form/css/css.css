@@ -1,0 +1,134 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 13.02.2019, 14:32:17
+    Author     : sasha
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+body{
+    font-size: 12pt; 
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.container{
+    width: 50%;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+.clear{
+    clear: both;
+}
+
+.cols{
+    display: block;
+    float: left;
+}
+
+.cols.col-1  { width: 8.33333333333%; }
+.cols.col-2  { width: 16.6666666667%; }
+.cols.col-3  { width: 25%; }
+.cols.col-4  { width: 33.3333333333%; }
+.cols.col-5  { width: 41.6666666667%; }
+.cols.col-6  { width: 50%; }
+.cols.col-7  { width: 58.3333333333%; }
+.cols.col-8  { width: 66.6666666667%; }
+.cols.col-9  { width: 75%; }
+.cols.col-10 { width: 83.3333333333%; }
+.cols.col-11 { width: 91.6666666667%; }
+.cols.col-12 { width: 100%; }
+
+.h30{
+    height: 30px;
+}
+
+.h10{
+    height: 10px;
+}
+
+.headers{
+    font-size: 16pt;
+    text-align: center;
+    height: 30px;
+}
+
+.elem-1, .elem-4{
+    width: 100%;
+    height: 300px;
+    padding: 5px;
+    margin: 0 0 10px 0;
+}
+
+.elem-4{
+    border: 1px solid #000;
+    font-size: 10pt;
+    padding: 5px;
+    overflow-y: scroll;
+}
+
+.elem-2{
+    width: 100%;
+    height: 200px;
+    font-size: 11pt;
+}
+
+.elem-3{
+    width: 100%;
+    height: 30px;
+    padding: 0 0 0 20px;
+    margin: 0 0 10px 0;
+}
+
+.elem-5{
+    width: 100%;
+    height: 30px;
+}
+
+.elem-6{
+    width: 100%;
+    height: 30px;
+    margin: 0 0 10px 0;
+}
+
+.border{
+    display: table;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    border: 1px solid #000;
+}
+
+.td{
+    padding: 5px;
+}
+
+.opt-1, .text-1{
+    font-weight: bold;
+    color: #000;
+}
+
+.text-2{
+    font-size: 16pt;
+    color: #000;
+    text-align: center;
+}
+
+.text-3{
+    width: 100%;
+    font-size: 10pt;
+}
+
+.text-4{
+    padding: 5px 0 5px 0;
+}

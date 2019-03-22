@@ -1,0 +1,92 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 30.01.2019, 14:42:06
+    Author     : sasha
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+body{
+    font-size: 12pt;
+}
+
+.container{
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.cols{
+    display: block;
+    float: left;
+}
+
+.cols.col-1  { width: 8.33333333333%; }
+.cols.col-2  { width: 16.6666666667%; }
+.cols.col-3  { width: 25%; }
+.cols.col-4  { width: 33.3333333333%; }
+.cols.col-5  { width: 41.6666666667%; }
+.cols.col-6  { width: 50%; }
+.cols.col-7  { width: 58.3333333333%; }
+.cols.col-8  { width: 66.6666666667%; }
+.cols.col-9  { width: 75%; }
+.cols.col-10 { width: 83.3333333333%; }
+.cols.col-11 { width: 91.6666666667%; }
+.cols.col-12 { width: 100%; }
+
+.clear{
+    clear: both;
+}
+
+.but-1{
+    width: 100%;
+    height: 30px;
+}
+
+.but-2{
+    background-color: #cedbe1;
+}
+
+.del:hover{
+    background-color: #e9e9e9;
+}
+
+.row{
+    height: 30px;
+}
+
+.row-1{
+    padding: 10px 0 10px 0;
+}
+
+.sel{
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+}
+
+.sel-2{
+    width: 100%;
+    height: 300px;
+    font-size: 12pt;
+    resize: none; 
+}
+
+.opt-1{
+    font-weight: bold;
+    color: #000;
+}
+
+.text{
+    padding: 5px 0 0 0;
+}
