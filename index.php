@@ -3,14 +3,13 @@
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-
-//include_once './action.php';
 ?>
 <html>
     <head>
         <title>index</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="resource/script/jquery-3.3.1.min.js" type="text/javascript"></script>
         <style type="text/css">
 
             .container{
@@ -43,18 +42,35 @@ ini_set('display_startup_errors', 1);
                 background-color: #dad55e;
             }
         </style>
-        <script src="source/jquery-3.3.1.min.js" type="text/javascript"></script>
     </head>
 
     <body>
+        <div id="show"></div>
         <script type="text/javascript">
+//            var ar = [];
+//            var s = "";
+//            for (var i = 0; i < 10; i++) {
+//                ar[i] = [];
+//                for (var j = 0; j < 10; j++) {
+//                    ar[i][j] = 0;
+//                    s += ar[i][j] + " ";
+//                }
+//                s += "<br>";
+//            }
+//
+//            var el = document.getElementById("show");
+//            el.innerHTML = s;
+//
+//            //$("#show").html(s);
+
         </script>
+
         <div class="container">
             <div class="col-1">
                 <div class="but"><a href="cartridge/index.php">cartridge</a></div>
                 <div class="but"><a href="saldova/index.php">сальдова</a></div>
                 <div class="but"><a href="test/index.php">Тест</a></div>
-                <div class="but"><a href="tetris/index.php">square</a></div>
+                <div class="but"><a href="tetris/index.html">Тетрис</a></div>
                 <div class="but"><a href="cartridge/index.php">cartridge</a></div>
                 <div class="but"><a href="eot/index.php">eot</a></div>
                 <div class="but"><a href="resume/index.php">резюме</a></div>
@@ -64,9 +80,7 @@ ini_set('display_startup_errors', 1);
             </div>
         </div>
         <div style="width: 100%;">
-            <?php
-           
-            ?>
+            <?php ?>
         </div>
     </body>
 </html>
