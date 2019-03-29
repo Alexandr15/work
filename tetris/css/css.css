@@ -44,13 +44,34 @@
     height: 30px;
 }
 
+#scene{
+    width: 1000px;
+    height: 700px;
+    margin: 0 auto;
+}
+
 #desc{
-    width: 300px;
+    width: 450px;
     height: 600px;
     border: 1px solid #000;
-    margin: 0 auto;
+    float: right;
+}
+
+#desc2{
+    width: 450px;
+    height: 600px;
+    border: 1px solid #000;
+    float: left;
+    margin: 0 50px 0 0;
 }
 
 .rect{
     float: left;
+}
+
+#message{
+    text-align: center;
+    font-size: 16pt;
+    color: red;
+    margin: 20px 0 20px 0;
 }

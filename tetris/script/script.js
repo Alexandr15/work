@@ -1,9 +1,10 @@
 window.onload = init;
 
-var cols = 10;
+var cols = 15;
 var rows = 20;
 
 var color;
+var number;
 
 var px = parseInt(cols / 2) - 1;
 var py = 0;
@@ -15,15 +16,67 @@ var key = 83;
 var figure;
 // номер фигуры
 var choice;
+// скорость падения фигур
+var delay = 500;
+
+var theEnd = true;
+
+var path = "/tetris/action.php";
+
+var start = false;
 
 function init() {
-    initdesc();
-    keypress();
-    getcolor();
-    setfigure();
 
-    timerId = setInterval(play, 300);
+    var id = setInterval(function () {
+
+        request();
+
+        if (start) {
+            clearInterval(id);
+            return false;
+        }
+
+    }, 1000);
+
+
+//    initdesc();
+//    keypress();
+//    setcolor();
+//    setfigure();
+//    play();
 }
+
+function request() {
+    var sum = "";
+    for (var i = 0, j = 1; i < 10; i++, j *= 10) {
+        sum += getRandomInt(1, 10);
+    }
+
+    $.ajax({
+        url: path,
+        type: 'POST',
+        data: {id: sum},
+        success: function (data, status) {
+            if (status !== "success") {
+                return;
+            }
+
+            var res = JSON.parse(data);
+
+            switch (res) {
+                case '1':
+                    $("p#message").text(data);
+                    break;
+                case '2':
+                    start = true;
+                    $("p#message").text(data);
+                    break;
+            }
+        }
+    });
+
+}
+
 
 // инициализация сетки по которой двигается фигура
 function initdesc() {
@@ -45,28 +98,57 @@ function initdesc() {
     }
 }
 
+function keypress() {
+    $('html').keyup(function (e) {
+        if (e.which === 37 || e.which === 39 || e.which === 40 || e.which === 65 || e.which === 68 || e.which === 32) {
+            key = e.which;
+        } else {
+            key = 83;
+        }
+    });
+}
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 // init color
-function getcolor() {
-
+function setcolor() {
     var key = getRandomInt(1, 4);
     switch (key) {
         case 1:
+            number = 1;
             color = "gray";
             break;
         case 2:
+            number = 2;
             color = "green";
             break;
         case 3:
+            number = 3;
             color = "peru";
             break;
     }
 }
+
+function getcolor(key) {
+    var col = "";
+    switch (key) {
+        case 1:
+            col = "gray";
+            break;
+        case 2:
+            col = "green";
+            break;
+        case 3:
+            col = "peru";
+            break;
+    }
+    return col;
+}
+
 // init figure
 function setfigure() {
-
+    //var ch = 11;
     var ch = getRandomInt(1, 12);
     switch (ch) {
         // * * *
@@ -145,73 +227,67 @@ function setfigure() {
 function getchangefigure() {
     switch (choice) {
         case 1:
-            if (px + 1 < cols) {
+            if (px + 1 < cols && py + 2 < rows) {
                 choice = 4;
                 figure = [[0, 1], [1, 1], [0, 1]];
             }
             break;
         case 2:
-            if (px + 1 < cols) {
+            if (px + 1 < cols && py + 2 < rows) {
                 choice = 3;
                 figure = [[1, 0], [1, 1], [1, 0]];
             }
             break;
         case 3:
-            if (px + 2 < cols) {
+            if (px + 2 < cols && py + 1 < rows) {
                 choice = 1;
                 figure = [[1, 1, 1], [0, 1, 0]];
             }
             break;
         case 4:
-            if (px + 2 < cols) {
+            if (px + 2 < cols && py + 1 < rows) {
                 choice = 2;
                 figure = [[0, 1, 0], [1, 1, 1]];
             }
             break;
         case 5:
-            if (px + 1 < cols) {
+            if (px + 1 < cols && py + 2 < rows) {
                 choice = 6;
                 figure = [[0, 1], [1, 1], [1, 0]];
             }
             break;
         case 6:
-            if (px + 2 < cols) {
+            if (px + 2 < cols && py + 1 < rows) {
                 choice = 5;
                 figure = [[1, 1, 0], [0, 1, 1]];
             }
             break;
         case 7:
-            if (px + 1 < cols) {
+            if (px + 1 < cols && py + 2 < rows) {
                 choice = 8;
                 figure = [[1, 0], [1, 1], [0, 1]];
             }
             break;
         case 8:
-            if (px + 2 < cols) {
+            if (px + 2 < cols && py + 1 < rows) {
                 choice = 7;
                 figure = [[0, 1, 1], [1, 1, 0]];
             }
             break;
         case 9:
-            if (px + 3 < cols) {
+            if (px + 3 < cols && py < rows) {
                 choice = 10;
                 figure = [[1, 1, 1, 1]];
             }
             break;
         case 10:
-            if (px < cols) {
+            if (px < cols && py + 3 < rows) {
                 choice = 9;
                 figure = [[1], [1], [1], [1]];
                 break;
             }
     }
 
-}
-
-function keypress() {
-    $('html').keyup(function (e) {
-        key = e.which;
-    });
 }
 
 function isDown() {
@@ -325,8 +401,8 @@ function isDown() {
                 }
             });
             break;
-            // * * * *
         case 10:
+            // * * * *
             $("div.rect").each(function () {
                 if ((parseInt($(this).data("x")) === px && parseInt($(this).data("y")) === py + 1 && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px + 1 && parseInt($(this).data("y")) === py + 1 && $(this).data("set") === "x") ||
@@ -337,9 +413,9 @@ function isDown() {
                 }
             });
             break;
-            // * *
-            // * *
         case 11:
+            // * *
+            // * *
             $("div.rect").each(function () {
                 if ((parseInt($(this).data("x")) === px && parseInt($(this).data("y")) === py + 2 && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px + 1 && parseInt($(this).data("y")) === py + 2 && $(this).data("set") === "x")) {
@@ -452,24 +528,26 @@ function isleft() {
             });
             break;
         case 9:
-            // * * * *
-            $("div.rect").each(function () {
-                if ((parseInt($(this).data("x")) === px - 1 && parseInt($(this).data("y")) === py && $(this).data("set") === "x")) {
-                    flag = false;
-                    return;
-                }
-            });
-            break;
             // *
             // *
             // *
             // *
-        case 10:
             $("div.rect").each(function () {
                 if ((parseInt($(this).data("x")) === px - 1 && parseInt($(this).data("y")) === py && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px - 1 && parseInt($(this).data("y")) === py + 1 && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px - 1 && parseInt($(this).data("y")) === py + 2 && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px - 1 && parseInt($(this).data("y")) === py + 3 && $(this).data("set") === "x")) {
+                    flag = false;
+                    return;
+                }
+            });
+            break;
+        case 10:
+            // * * * *
+            $("div.rect").each(function () {
+                var x = parseInt($(this).data("x"));
+                var y = parseInt($(this).data("y"));
+                if ((parseInt($(this).data("x")) === px - 1 && parseInt($(this).data("y")) === py && $(this).data("set") === "x")) {
                     flag = false;
                     return;
                 }
@@ -590,19 +668,10 @@ function isright() {
             });
             break;
         case 9:
-            // * * * *
-            $("div.rect").each(function () {
-                if ((parseInt($(this).data("x")) === px + 4 && parseInt($(this).data("y")) === py && $(this).data("set") === "x")) {
-                    flag = false;
-                    return;
-                }
-            });
-            break;
             // *
             // *
             // *
             // *
-        case 10:
             $("div.rect").each(function () {
                 if ((parseInt($(this).data("x")) === px + 1 && parseInt($(this).data("y")) === py && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px + 1 && parseInt($(this).data("y")) === py + 1 && $(this).data("set") === "x") ||
@@ -613,9 +682,18 @@ function isright() {
                 }
             });
             break;
-            // * *
-            // * *
+        case 10:
+            // * * * *
+            $("div.rect").each(function () {
+                if ((parseInt($(this).data("x")) === px + 4 && parseInt($(this).data("y")) === py && $(this).data("set") === "x")) {
+                    flag = false;
+                    return;
+                }
+            });
+            break;
         case 11:
+            // * *
+            // * *
             $("div.rect").each(function () {
                 if ((parseInt($(this).data("x")) === px + 2 && parseInt($(this).data("y")) === py && $(this).data("set") === "x") ||
                         (parseInt($(this).data("x")) === px + 2 && parseInt($(this).data("y")) === py + 1 && $(this).data("set") === "x")) {
@@ -641,6 +719,7 @@ function play() {
             } else {
                 isend();
             }
+            key = 83;
             break;
         case 39://right
         case 68:
@@ -650,23 +729,57 @@ function play() {
             } else {
                 isend();
             }
+            key = 83;
             break;
         case 40://down
+            delay = 30;
+            isend();
+            break;
         case 83:
             isend();
             break;
         case 32://space
             getchangefigure();
             isend();
+            key = 83;
             break;
-    }
-
-    if (key !== 83) {
-        key = 83;
     }
     // draw picture
     drawOrClear(1);
+
+    timerId = setTimeout(function () {
+        if (theEnd) {
+            play();
+        } else {
+            $("#message").text("Вы проирали!");
+            clearTimeout(timerId);
+            return;
+        }
+    }, delay);
 }
+
+// если фигура достигает конца экрана удаляются сложенные ряды
+function isend() {
+    if (py + figure.length < rows && isDown()) {
+        py++;
+    } else {
+        key = 83;
+        delay = 500;
+        drawOrClear(1);
+        drain();
+        py = 0;
+        px = parseInt(cols / 2) - 1;
+        $("div.rect").each(function () {
+            if (parseInt($(this).data("x")) === px && parseInt($(this).data("y")) === py && $(this).data("set") === "x") {
+                theEnd = false;
+                return;
+            }
+        });
+        setcolor();
+        setfigure();
+    }
+}
+
 // удаляет собранную линию
 function drain() {
     // инициализируем массив
@@ -680,32 +793,23 @@ function drain() {
 
     var i = 0;
     var j = 0;
-    var s = "";
-
-    var list = [];
-    var index = 0;
     // переносим массив HTML in ar
     $("div.rect").each(function () {
         if (parseInt($(this).data("x")) === j && parseInt($(this).data("y")) === i) {
             // возвращает данные которые хранятся в элементе
             if ($(this).data("set") === "x") {
-                var col = $(this).css("backgroundColor");
-                list[index] = [i, j, col];
-                index++;
-                ar[i][j] = 1;
+                var num = parseInt($(this).data("number"));
+                ar[i][j] = num;
             }
-            s += ar[i][j] + " ";
             j++;
 
             if (j === cols) {
-                s += "<br>";
                 i++;
                 j = 0;
             }
         }
     });
 
-    //$("#show").html(s);
     // проверяем и удаляем сложенные строки
     for (var i = 0; i < rows; i++) {
         var flag = true;
@@ -727,7 +831,6 @@ function drain() {
                 }
             }
         }
-
     }
 
     i = 0;
@@ -736,8 +839,9 @@ function drain() {
     $("div.rect").each(function () {
         if (parseInt($(this).data("x")) === j && parseInt($(this).data("y")) === i) {
 
-            if (ar[i][j] === 1) {
-                $(this).css({backgroundColor: color}).data("set", "x");
+            if (ar[i][j] !== 0) {
+                var col = getcolor(parseInt(ar[i][j]));
+                $(this).css({backgroundColor: col}).data("set", "x").data("number", ar[i][j]);
             } else {
                 $(this).css({backgroundColor: ""}).data("set", "");
             }
@@ -752,28 +856,6 @@ function drain() {
 
 }
 
-// фигура достигает конца
-function isend() {
-
-    if (py + figure.length < rows && isDown()) {
-        py++;
-    } else {
-        // draw picture
-        drawOrClear(1);
-        drain();
-        py = 0;
-        px = parseInt(cols / 2) - 1;
-        $("div.rect").each(function () {
-            if (parseInt($(this).data("x")) === px && parseInt($(this).data("y")) === py && $(this).data("set") === "x") {
-                console.log("you lose");
-                clearInterval(timerId);
-            }
-        });
-        getcolor();
-        setfigure();
-    }
-}
-
 // рисует фигуру
 function drawOrClear(ch) {
     for (var i = py, r = 0; i < py + figure.length; i++, r++) {
@@ -781,9 +863,9 @@ function drawOrClear(ch) {
             $("div.rect").each(function () {
                 if (parseInt($(this).data("x")) === j && parseInt($(this).data("y")) === i && figure[r][c] === 1) {
                     if (ch) {
-                        $(this).css({backgroundColor: color}).data("set", "x");
+                        $(this).css({backgroundColor: color}).data("set", "x").data("number", number);
                     } else {
-                        $(this).css({backgroundColor: ""}).data("set", "o");
+                        $(this).css({backgroundColor: ""}).data("set", "");
                     }
                     return false;
                 }
