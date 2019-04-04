@@ -1,6 +1,6 @@
 window.onload = init;
 
-var cols = 15;
+var cols = 10;
 var rows = 20;
 
 var color;
@@ -18,82 +18,153 @@ var figure;
 var choice;
 // скорость падения фигур
 var delay = 500;
-
+// окончание игры
 var theEnd = true;
 
 var path = "/tetris/action.php";
-
+// найден опонент стартует игра
 var start = false;
 
+// хранит массив который записывается в бд и передается для отображения противнику
+var array = [];
+// хранит уникальное число
+var sum = "";
+
 function init() {
-
     var id = setInterval(function () {
-
-        request();
-
         if (start) {
             clearInterval(id);
             return false;
         }
+        seachuser();
+    }, 2000);
 
-    }, 1000);
-
-
-//    initdesc();
-//    keypress();
-//    setcolor();
-//    setfigure();
-//    play();
+    choiceuser();
 }
-
-function request() {
-    var sum = "";
-    for (var i = 0, j = 1; i < 10; i++, j *= 10) {
-        sum += getRandomInt(1, 10);
-    }
-
+// проверка пользователей и составление нового списка
+function seachuser() {
     $.ajax({
         url: path,
         type: 'POST',
-        data: {id: sum},
+        data: {key: 1},
         success: function (data, status) {
             if (status !== "success") {
                 return;
             }
-
             var res = JSON.parse(data);
-
-            switch (res) {
-                case '1':
-                    $("p#message").text(data);
-                    break;
-                case '2':
-                    start = true;
-                    $("p#message").text(data);
-                    break;
+            $("#group").empty();
+            for (var i = 0; i < res.length; i++) {
+                $("#group").append($("<div class='user'></div>").text(res[i][1]));
             }
         }
     });
+}
+// выбор пользователя
+function choiceuser() {
+    $("div").on("click", ".user", function () {
+        var enemy = $(this).text();
+        $.ajax({
+            url: path,
+            type: 'POST',
+            data: {key: 4, enemy: enemy},
+            success: function (data, status) {
+                if (status !== "success") {
+                    return;
+                }
+                if (data) {
+                    start = true;
+                    initdesc();
+                    keypress();
+                    setcolor();
+                    setfigure();
+                    play();
+                }
+            }
+        });
+    });
+}
 
+function finishing() {
+    $.ajax({
+        url: path,
+        type: 'POST',
+        data: {key: 5, end: 1},
+        success: function (data, status) {
+            if (status !== "success") {
+                return;
+            }
+        }
+    });
+}
+
+// отправка массива
+function sendArray() {
+    var json = JSON.stringify(array);
+    $.ajax({
+        url: path,
+        type: 'POST',
+        data: {key: 2, id: sum, array: json},
+        success: function (data, status) {
+            if (status !== "success") {
+                return;
+            }
+            var ar = JSON.parse(data);
+            var res = ar[0];
+            var end = ar[1];
+
+            if (end) {
+                theEnd = false;
+            }
+
+            for (var i = 0; i < res.length; i++) {
+                for (var j = 0; j < res[i].length; j++) {
+                    $("div.rect2").each(function () {
+                        if (parseInt($(this).data("x")) === j && parseInt($(this).data("y")) === i) {
+                            if (res[i][j] !== 0) {
+                                var col = getcolor(parseInt(res[i][j]));
+                                $(this).css({backgroundColor: col});
+                            } else {
+                                $(this).css({backgroundColor: ""});
+                            }
+                            return false;
+                        }
+                    });
+                }
+            }
+
+        }
+    });
+}
+
+function clearbd() {
+    $("#bd").click(function () {
+        $.ajax({
+            url: path,
+            type: 'POST',
+            data: {key: 3},
+            success: function (data, status) {
+                if (status !== "success") {
+                    return;
+                }
+            }
+        });
+    });
 }
 
 
 // инициализация сетки по которой двигается фигура
 function initdesc() {
     var el = $("#desc");
-
-    if (cols === 0 || rows === 0) {
-        return false;
-    }
+    var el2 = $("#desc2");
 
     var h = el.height() / rows;
     var w = el.width() / cols;
 
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
-            var rect = $("<div class='rect'></div>");
-            rect.css({width: w, height: h}).data("x", j).data("y", i).data("set", "");
+            var rect = $("<div class='rect'></div>").css({width: w, height: h}).data("x", j).data("y", i).data("set", "");
             el.append(rect);
+            el2.append($("<div class='rect2'></div>").css({width: w, height: h}).data("x", j).data("y", i));
         }
     }
 }
@@ -746,12 +817,12 @@ function play() {
     }
     // draw picture
     drawOrClear(1);
-
+    sendArray();
     timerId = setTimeout(function () {
         if (theEnd) {
             play();
         } else {
-            $("#message").text("Вы проирали!");
+            $("#m").text("Вы проирали!");
             clearTimeout(timerId);
             return;
         }
@@ -786,8 +857,10 @@ function drain() {
     var ar = new Array();
     for (var i = 0; i < rows; i++) {
         ar[i] = [];
+        array[i] = [];
         for (var j = 0; j < cols; j++) {
             ar[i][j] = 0;
+            array[i][j] = 0;
         }
     }
 
@@ -842,6 +915,7 @@ function drain() {
             if (ar[i][j] !== 0) {
                 var col = getcolor(parseInt(ar[i][j]));
                 $(this).css({backgroundColor: col}).data("set", "x").data("number", ar[i][j]);
+                array[i][j] = ar[i][j];
             } else {
                 $(this).css({backgroundColor: ""}).data("set", "");
             }
@@ -872,16 +946,4 @@ function drawOrClear(ch) {
             });
         }
     }
-}
-
-
-function show() {
-    var s = "";
-    for (var i = 0; i < figure.length; i++) {
-        for (var j = 0; j < figure[i].length; j++) {
-            s += figure[i][j] + " ";
-        }
-        s += "\n";
-    }
-    console.log(s);
 }

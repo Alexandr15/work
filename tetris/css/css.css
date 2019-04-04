@@ -51,27 +51,54 @@
 }
 
 #desc{
-    width: 450px;
+    width: 300px;
     height: 600px;
     border: 1px solid #000;
     float: right;
 }
 
 #desc2{
-    width: 450px;
+    width: 300px;
     height: 600px;
     border: 1px solid #000;
     float: left;
     margin: 0 50px 0 0;
 }
 
-.rect{
+#group{
+    width: 400px;
+    border: 1px solid #000;
+    padding: 10px 10px 0 10px ;
+    margin: 10px auto 10px auto;
+}
+
+#menu{
+    width: 220px;
+    border: 1px solid #000;
+    padding: 10px 10px 0 10px;
+    margin: 0 auto;
+}
+
+#solo, #bd, #net{
+    width: 200px;
+    height: 30px;
+    margin: 0 0 10px 0;
+}
+
+.user{
+    width: 100%;
+    height: 30px;
+    border: 1px solid #000;
+    margin: 0 0 10px 0;
+    padding: 0 0 0 10px;
+    font-size: 14pt;
+}
+
+.user:hover{
+    background-color: #c5c5c5;
+}
+
+.rect, .rect2{
     float: left;
 }
 
-#message{
-    text-align: center;
-    font-size: 16pt;
-    color: red;
-    margin: 20px 0 20px 0;
-}

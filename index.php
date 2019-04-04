@@ -70,7 +70,7 @@ ini_set('display_startup_errors', 1);
                 <div class="but"><a href="cartridge/index.php">cartridge</a></div>
                 <div class="but"><a href="saldova/index.php">сальдова</a></div>
                 <div class="but"><a href="test/index.php">Тест</a></div>
-                <div class="but"><a href="tetris/index.html">Тетрис</a></div>
+                <div class="but"><a href="tetris/index.php">Тетрис</a></div>
                 <div class="but"><a href="cartridge/index.php">cartridge</a></div>
                 <div class="but"><a href="eot/index.php">eot</a></div>
                 <div class="but"><a href="resume/index.php">резюме</a></div>
