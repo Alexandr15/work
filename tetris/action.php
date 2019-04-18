@@ -27,58 +27,53 @@ class Tetris {
     }
 
     function run() {
-
-        $key = (int) filter_input(INPUT_POST, "key");
-
+        $key = (int) filter_input(INPUT_POST, "choice");
         switch ($key) {
             case 1:
                 $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
-                $ar = $this->getUsers($ip);
-                $json = json_encode($ar);
-                echo $json;
+                $enemy_id = $this->get_free($ip);
+                
+                if ($enemy_id === null) {
+                    echo '';
+                    return;
+                }
+
+                $user_id = $this->get_id($ip);
+                $this->update_row($user_id, $enemy_id);
+                $this->update_row($enemy_id, $user_id);
                 break;
             case 2:
-                $json = filter_input(INPUT_POST, "array");
-                $id = filter_input(INPUT_POST, "id");
-                // записываем массив
-                $this->update_array($id, $json);
-                // выгружаем массив опонента
-                $ar[0] = $this->getArray($id);
+                $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
+                $user_id = $this->get_id($ip);
+                $enemy_id = $this->get_enemy_id($user_id);
+                $busy1 = $this->get_busy($user_id); // 0
+                $busy2 = $this->get_busy($enemy_id); // null
 
-                $end = $this->get_end($id);
-
-                if ($end) {
-                    $ar[1] = $end;
+                if ((int) $busy1 === 1 && (int) $busy2 === 1) {
+                    echo "start";
+                } else {
+                    echo "";
                 }
-                
-                $ar[1] = "";
 
-                $json = json_encode($ar);
-                echo $ar;
                 break;
             case 3:
-                $this->clearbd();
-                break;
-            case 4:
                 $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
-                $enemy = filter_input(INPUT_POST, 'enemy');
-                // возвращаем id_user1 по ip
-                $user1 = $this->getUser($ip);
-                $user2 = $this->getUser($enemy);
-                // обновляем записи добавление соперника
-                $this->update($user1, $user2);
-                $this->update($user2, $user1);
-                echo "ok";
-            case 5:
-                $end = filter_input(INPUT_POST, 'end');
-                $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
-                end($end, $ip);
+                $content = filter_input(INPUT_POST, 'content');
+                $user_id = $this->get_id($ip);
+                $enemy_id = $this->get_enemy_id($user_id);
+                $this->update_content($user_id, $content);
+                $s = $this->get_content($enemy_id);
+                echo $s === null ? "" : $s;
                 break;
         }
     }
 
-    private function getUser($ip) {
-        $res = $this->mysqli->query("SELECT id_user1 FROM phpsl_tetris WHERE ip = '" . $ip . "'");
+    function insert($ip) {
+        $this->mysqli->query("INSERT INTO phpsl_atetris (enemy, busy, ip, content) VALUES ('', 0, '" . $ip . "', '') ");
+    }
+
+    function get_ip($ip) {
+        $res = $this->mysqli->query("SELECT ip FROM phpsl_atetris WHERE ip = '" . $ip . "'");
         if ($res) {
             $row = $res->fetch_row();
             $res->close();
@@ -86,8 +81,16 @@ class Tetris {
         return $row[0];
     }
 
-    function getIp($ip) {
-        $res = $this->mysqli->query("SELECT ip FROM phpsl_tetris WHERE ip = '" . $ip . "'");
+    private function update_row($id, $enemy) {
+        $this->mysqli->query("UPDATE phpsl_atetris SET enemy = '" . $enemy . "', busy = 1 WHERE id = '" . $id . "'");
+    }
+
+    private function update_content($id, $content) {
+        $this->mysqli->query("UPDATE phpsl_atetris SET content = '" . $content . "', busy = 1 WHERE id = '" . $id . "'");
+    }
+
+    private function get_free($ip) {
+        $res = $this->mysqli->query("SELECT id FROM phpsl_atetris WHERE busy = 0 AND ip != '" . $ip . "' ORDER BY id ASC LIMIT 1");
         if ($res) {
             $row = $res->fetch_row();
             $res->close();
@@ -95,23 +98,8 @@ class Tetris {
         return $row[0];
     }
 
-    function insertUser($id, $ip) {
-        $this->mysqli->query("INSERT INTO phpsl_tetris (id_user1, id_user2, ip, array, end, create_time) VALUES (" . $id . ", '', '" . $ip . "', '', '0', '')");
-    }
-
-    private function getUsers($ip) {
-        $res = $this->mysqli->query("SELECT id_user1, ip FROM phpsl_tetris WHERE ip != '" . $ip . "' ORDER BY id_user1 DESC");
-        $ar = [];
-        $i = 0;
-        while ($row = $res->fetch_row()) {
-            $ar[$i] = [$row[0], $row[1]];
-            $i++;
-        }
-        return $ar;
-    }
-
-    private function getArray($id) {
-        $res = $this->mysqli->query("SELECT array FROM phpsl_tetris WHERE id_user2 = '" . $id . "'");
+    private function get_id($ip) {
+        $res = $this->mysqli->query("SELECT id FROM phpsl_atetris WHERE ip = '" . $ip . "'");
         if ($res) {
             $row = $res->fetch_row();
             $res->close();
@@ -119,24 +107,8 @@ class Tetris {
         return $row[0];
     }
 
-    private function update($id_user1, $id_user2) {
-        $this->mysqli->query("UPDATE phpsl_tetris SET id_user2 = '" . $id_user2 . "' WHERE id_user1 = '" . $id_user1 . "'");
-    }
-
-    function updateip($id, $ip) {
-        $this->mysqli->query("UPDATE phpsl_tetris SET id_user1 = '" . $id . "' WHERE ip = '" . $ip . "'");
-    }
-
-    private function update_array($id, $ar) {
-        $this->mysqli->query("UPDATE phpsl_tetris SET array = '" . $ar . "' WHERE id_user1 = '" . $id . "'");
-    }
-
-    private function end($end, $ip) {
-        $this->mysqli->query("UPDATE phpsl_tetris SET end = '" . $end . "' WHERE ip = '" . $ip . "'");
-    }
-
-    private function get_end($id) {
-        $res = $this->mysqli->query("SELECT end FROM phpsl_tetris WHERE id_user2 = '" . $id . "'");
+    private function get_enemy_id($id) {
+        $res = $this->mysqli->query("SELECT enemy FROM phpsl_atetris WHERE id = '" . $id . "'");
         if ($res) {
             $row = $res->fetch_row();
             $res->close();
@@ -144,17 +116,25 @@ class Tetris {
         return $row[0];
     }
 
-    private function clearbd() {
-        $this->mysqli->query("TRUNCATE TABLE phpsl_tetris");
+    private function get_busy($id) {
+        $res = $this->mysqli->query("SELECT busy FROM phpsl_atetris WHERE id = '" . $id . "'");
+        if ($res) {
+            $row = $res->fetch_row();
+            $res->close();
+        }
+        return $row[0];
+    }
+
+    private function get_content($id) {
+        $res = $this->mysqli->query("SELECT content FROM phpsl_atetris WHERE id = '" . $id . "'");
+        if ($res) {
+            $row = $res->fetch_row();
+            $res->close();
+        }
+        return $row[0];
     }
 
 }
 
 $tetris = new Tetris();
 $tetris->run();
-
-
-
-
-
-
