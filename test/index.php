@@ -17,11 +17,9 @@ include_once '../test/action.php';
     <body>
         <?php
         
-        $test = new Test();
-        $test->run();
-        
-        
         ?>
+
+        <div id="desc"></div>
 
     </body>
 </html>

@@ -13,10 +13,11 @@ $res = $tetris->get_ip($ip);
 
 if ($res === null) {
     $tetris->insert($ip);
+} else {
+    $tetris->reset($ip);
 }
 
 $tetris->close();
-
 ?>
 <html>
     <head>
@@ -28,13 +29,20 @@ $tetris->close();
         <script type="text/javascript" src="../tetris/script/script.js"></script>
     </head>
     <body>
-        <div class="conteiner">
-            <div id="desc2"></div>
-            <div id="desc"></div>
-            <div class="clear"></div>
-            <input id="but" type="button" value="Жми">
-            <p id="m"></p>
-        </div>
+        <header>Tetris</header>
+        <section>
+            <div class="conteiner">
+                <div id="desc"></div>
+                <div id="user"></div>
+                <div id="desc2"></div>
+                <div id="enemy"></div>
+                <div class="clear"></div>
+                <input id="but" type="button" value="Two players">
+                <input id="but_2" type="button" value="One player">
+                <p id="m"></p>
+            </div>
+        </section>
+        <footer></footer>
     </body>
 </html>
 

@@ -27,7 +27,7 @@ class Test {
     }
 
     function run() {
-        echo $s;
+        
     }
     
     // записывает в таблицу web_dostup код и логины

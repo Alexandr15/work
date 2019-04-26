@@ -8,3 +8,23 @@ and open the template in the editor.
     Author     : sasha
 */
 
+#desc{
+    margin: 100px 0 0 100px;
+    width: 122px;
+    height: 122px;
+    border: 1px solid #000;
+}
+
+.rect{
+    width: 30px;
+    height: 30px;
+    background-image: none;
+    float: left;
+}
+
+.rect2{
+    width: 30px;
+    height: 30px;
+    background-image: url(../1.png);
+    float: left;
+}

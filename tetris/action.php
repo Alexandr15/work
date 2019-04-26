@@ -32,22 +32,26 @@ class Tetris {
             case 1:
                 $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
                 $enemy_id = $this->get_free($ip);
-                
+                $enemy = $this->is_start($ip);
+
+                if ($enemy !== '') {
+                    echo "start";
+                }
+
                 if ($enemy_id === null) {
                     echo '';
                     return;
                 }
 
-                $user_id = $this->get_id($ip);
-                $this->update_row($user_id, $enemy_id);
-                $this->update_row($enemy_id, $user_id);
+                $ids = $this->get_id($ip);
+                $this->update_row($ids[1], $enemy_id);
+                $this->update_row($enemy_id, $ids[1]);
                 break;
             case 2:
                 $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
-                $user_id = $this->get_id($ip);
-                $enemy_id = $this->get_enemy_id($user_id);
-                $busy1 = $this->get_busy($user_id); // 0
-                $busy2 = $this->get_busy($enemy_id); // null
+                $ids = $this->get_id($ip);
+                $busy1 = $this->get_busy($ids[1]); // 0
+                $busy2 = $this->get_busy($ids[0]); // 0
 
                 if ((int) $busy1 === 1 && (int) $busy2 === 1) {
                     echo "start";
@@ -59,11 +63,28 @@ class Tetris {
             case 3:
                 $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
                 $content = filter_input(INPUT_POST, 'content');
-                $user_id = $this->get_id($ip);
-                $enemy_id = $this->get_enemy_id($user_id);
-                $this->update_content($user_id, $content);
-                $s = $this->get_content($enemy_id);
-                echo $s === null ? "" : $s;
+                $ids = $this->get_id($ip); // получаем айди игрока
+
+                if ($ids[0] === "" || $ids[0] === null) {
+                    echo "1";
+                    return;
+                }
+
+                $this->update_content($ids[1], $content);
+                $s = $this->get_content($ids[0]);
+
+                if ($s === null || $s === "") {
+                    echo "2";
+                } else {
+                    echo $s;
+                }
+                break;
+            case 4:
+                $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
+                $ids = $this->get_id($ip);
+                $this->gameover($ids[1]);
+                $this->gameover($ids[0]);
+                echo '';
                 break;
         }
     }
@@ -86,7 +107,15 @@ class Tetris {
     }
 
     private function update_content($id, $content) {
-        $this->mysqli->query("UPDATE phpsl_atetris SET content = '" . $content . "', busy = 1 WHERE id = '" . $id . "'");
+        $this->mysqli->query("UPDATE phpsl_atetris SET content = '" . $content . "' WHERE id = '" . $id . "'");
+    }
+
+    private function gameover($id) {
+        $this->mysqli->query("UPDATE phpsl_atetris SET enemy = '', content = '' WHERE id = '" . $id . "'");
+    }
+
+    function reset($ip) {
+        $this->mysqli->query("UPDATE phpsl_atetris SET enemy = '', busy = 0, content = '' WHERE ip = '" . $ip . "'");
     }
 
     private function get_free($ip) {
@@ -99,16 +128,16 @@ class Tetris {
     }
 
     private function get_id($ip) {
-        $res = $this->mysqli->query("SELECT id FROM phpsl_atetris WHERE ip = '" . $ip . "'");
+        $res = $this->mysqli->query("SELECT enemy, id FROM phpsl_atetris WHERE ip = '" . $ip . "'");
         if ($res) {
             $row = $res->fetch_row();
             $res->close();
         }
-        return $row[0];
+        return $row;
     }
 
-    private function get_enemy_id($id) {
-        $res = $this->mysqli->query("SELECT enemy FROM phpsl_atetris WHERE id = '" . $id . "'");
+    private function is_start($ip) {
+        $res = $this->mysqli->query("SELECT enemy FROM phpsl_atetris WHERE ip = '" . $ip . "' AND busy = 1");
         if ($res) {
             $row = $res->fetch_row();
             $res->close();
