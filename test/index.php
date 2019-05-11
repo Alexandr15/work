@@ -20,6 +20,6 @@ include_once '../test/action.php';
         ?>
 
         <div id="desc"></div>
-
+        <div id="mes"></div>
     </body>
 </html>

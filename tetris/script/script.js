@@ -241,45 +241,17 @@ function show(elem, ar) {
         return;
     }
 
-//    $(elem).each(function () {
-//        var x = parseInt($(this).data("x"));
-//        var y = parseInt($(this).data("y"));
-//
-//        if (ar[y][x] !== 0) {
-//            var color = getcolor(ar[y][x]);
-//            $(this).css({backgroundColor: color});
-//        } else {
-//            $(this).css({backgroundColor: ""});
-//        }
-//    });
-
-//    $(elem).each(function () {
-//        var x = parseInt($(this).data("x"));
-//        var y = parseInt($(this).data("y"));
-//
-//        if (ar[y][x] !== 0) {
-//            var color = getcolor(ar[y][x]);
-//            $(this).css('backgroundImage', 'url(../bgrect.png)');
-//        } else {
-//            $(this).css('backgroundImage', 'none');
-//        }
-//    });
-
     $(elem).each(function () {
         var x = parseInt($(this).data("x"));
         var y = parseInt($(this).data("y"));
-        
-        $(this).removeAttr("class");
 
         if (ar[y][x] !== 0) {
-            $(this).attr("class", "rect3");
+            var color = getcolor(ar[y][x]);
+            //$(this).css("background-color", color);
+            $(this).css("background-image", "url(ter.png)");
         } else {
-            $(this).attr("class", "rect");
-//            if (elem === ".rect2") {
-//                $(this).attr("class", "rect2");
-//            } else if (elem === ".rect") {
-//                $(this).attr("class", "rect");
-//            }
+            //$(this).css("background-color", "");
+            $(this).css("background-image", "none");
         }
     });
 }

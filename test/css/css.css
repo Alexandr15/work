@@ -10,9 +10,10 @@ and open the template in the editor.
 
 #desc{
     margin: 100px 0 0 100px;
-    width: 122px;
-    height: 122px;
+    width: 302px;
+    height: 602px;
     border: 1px solid #000;
+    background: linear-gradient(120deg, #FFFFFF, #39D6EF); 
 }
 
 .rect{
