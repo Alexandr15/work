@@ -27,9 +27,10 @@ and open the template in the editor.
             <div class="menu">
                 <div id="bookmark1">About me</div>
                 <div id="bookmark2">Purpose</div>
-                <div id="bookmark3">Education</div>
-                <div id="bookmark4">Skill</div>
-                <div id="bookmark5">Сontact</div>
+                <div id="bookmark3">Experience</div>
+                <div id="bookmark4">Education</div>
+                <div id="bookmark5">Skill</div>
+                <div id="bookmark6">Сontact</div>
             </div>
 
             <div class="content"></div>
