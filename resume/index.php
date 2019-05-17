@@ -8,7 +8,7 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title></title>
+        <title>Resume</title>
 
         <link rel="stylesheet" type="text/css" href="../resume/css/css.css" />
         <link rel="stylesheet" type="text/css" media="(min-width:481px) and (max-width:768px)" href="../resume/css/css.css" />
@@ -19,11 +19,9 @@ and open the template in the editor.
         <script type="text/javascript" src="../resume/script/script.js"></script>
     </head>
     <body>
-        <?php
-        ?>
+        <div class='header'><h1>Резюме<h1></div>
 
         <div class="conteiner">
-
             <div class="menu">
                 <div id="bookmark1">About me</div>
                 <div id="bookmark2">Purpose</div>
@@ -32,10 +30,15 @@ and open the template in the editor.
                 <div id="bookmark5">Skill</div>
                 <div id="bookmark6">Сontact</div>
             </div>
-
             <div class="content"></div>
-
         </div>
 
+        <div class="footer">
+            <p id='date'></p>
+            <script type="text/javascript">
+                var date = new Date();
+                $("p#date").text(date.getFullYear());
+            </script>
+        </div>
     </body>
 </html>
